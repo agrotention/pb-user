@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "./pb-user";
+
+service ServiceUser {
+    rpc Create(InCreate) returns (OutSuccess);
+}
+
+message InCreate {
+
+}
+
+message InDelete {
+
+}
+
+message OutSuccess {
+
+}
