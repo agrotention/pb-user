@@ -16,25 +16,12 @@
 
 ## TODO
 
-- [ ] Membuat kontrak untuk service user
-  - [ ] `Create` : Membuat user baru
-    - Masukkan setidakya semua data wajib non-default dari skema
-    - Validasi data
-    - Hash password
-    - Save ke database
-
-  - [ ] `Delete` : Hapus akun berdasarkan ID
-    - Cari user berdasarkan id
-    - Verifikasi apakah user merupakan pemilik akun / admin
-    - Soft delete user dengan menambahkan deleted_at
-
-  - [ ] `List` : Daftar user dengan filter
-  - [ ] `GetOther` : Mengambil informasi akun lain
-  - [ ] `GetSelf` : Mengambil informasi akun sendiri
-  - [ ] `Update` : Update data umum user
-- [ ] Membuat kontrak untuk service auth
-  - [ ] `ChangeEmail` : Mengubah email user
-  - [ ] `ChangePassword` : Mengubah password dari user
-  - [ ] `ChangeUsername` : Mengubah username dari user
-  - [ ] `LogIn` : Membuat akses dan refresh JWT token
-  - [ ] `VerifyToken`: Mengubah jwt ke data kredensial user
+- [x] Membuat kontrak untuk service user
+  - [x] CreateUser
+  - [x] GetPrivateDetailUser
+  - [x] GetPublicDetailUser
+  - [x] GetListUser
+  - [x] UpdatePublicDetailUser
+  - [x] UpdateCredentialUser
+  - [x] DisableUser
+  - [x] DeleteUser
