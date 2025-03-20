@@ -1,19 +1,97 @@
 syntax = "proto3";
 
 option go_package = "./pb-user";
+import "google/protobuf/timestamp.proto";
 
 service ServiceUser {
-    rpc Create(InCreate) returns (OutSuccess);
+    rpc CreateUser(CreateUserRequest) returns (SuccessResponse);
+    rpc GetPrivateDetailUser(PrivateDetailUserRequest) returns (PrivateDetailUserResponse);
+    rpc GetPublicDetailUser(PublicDetailUserRequest) returns (PublicDetailUserResponse);
+    rpc GetListUser(ListUserRequest) returns (ListUserResponse);
+    rpc UpdatePublicDetailUser(UpdatePublicDetailUserRequest) returns (SuccessResponse);
+    rpc UpdateCredentialUser(UpdateCredentialUserRequest) returns (SuccessResponse);
+    rpc DisableUser(DisableUserRequest) returns (SuccessResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (SuccessResponse);
 }
 
-message InCreate {
-
+// Create user
+message CreateUserRequest {
+    string Email = 1;
+    string Username = 2;
+    string Password = 3;
+    string FirstName = 4;
+    string LastName = 5;
 }
 
-message InDelete {
 
+// Private detail user
+message PrivateDetailUserRequest {
+    string UserID = 1;
+}
+message PrivateDetailUserResponse {
+    string Email = 1;
+    string Username = 2;
+    string FirstName = 3;
+    string LastName = 4;    
+    google.protobuf.Timestamp CreatedAt = 5;
+    google.protobuf.Timestamp UpdatedAt = 6;
 }
 
-message OutSuccess {
 
+// Public detail
+message PublicDetailUserRequest {
+    string Username = 1;
+}
+message PublicDetailUserResponse {
+    string Username = 1;
+    string FirstName = 2;
+    string LastName = 3; 
+}
+
+
+// List users
+message ListUserItem {
+    string Username = 1;
+    string FirstName = 2;
+    string LastName = 3; 
+}
+message ListUserRequest {
+    int64 Take = 1;
+    int64 Skip = 2;
+}
+message ListUserResponse {
+    repeated ListUserItem Users = 1;
+}
+
+
+// Update public detail
+message UpdatePublicDetailUserRequest {
+    string Username = 1;
+    string FirstName = 2;
+    string LastName = 3; 
+}
+
+
+// Update credential
+message UpdateCredentialUserRequest {
+    string Email = 1;
+    string Password = 2;
+}
+
+
+// Disable user
+message DisableUserRequest {
+    string UserID = 1;
+}
+
+
+// Delete user
+message DeleteUserRequest {
+    string UserID = 1;
+}
+
+
+// General user opetation success response
+message SuccessResponse {
+    string UserID = 1;
 }

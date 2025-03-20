@@ -19,14 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ServiceUser_Create_FullMethodName = "/ServiceUser/Create"
+	ServiceUser_CreateUser_FullMethodName             = "/ServiceUser/CreateUser"
+	ServiceUser_GetPrivateDetailUser_FullMethodName   = "/ServiceUser/GetPrivateDetailUser"
+	ServiceUser_GetPublicDetailUser_FullMethodName    = "/ServiceUser/GetPublicDetailUser"
+	ServiceUser_GetListUser_FullMethodName            = "/ServiceUser/GetListUser"
+	ServiceUser_UpdatePublicDetailUser_FullMethodName = "/ServiceUser/UpdatePublicDetailUser"
+	ServiceUser_UpdateCredentialUser_FullMethodName   = "/ServiceUser/UpdateCredentialUser"
+	ServiceUser_DisableUser_FullMethodName            = "/ServiceUser/DisableUser"
+	ServiceUser_DeleteUser_FullMethodName             = "/ServiceUser/DeleteUser"
 )
 
 // ServiceUserClient is the client API for ServiceUser service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceUserClient interface {
-	Create(ctx context.Context, in *InCreate, opts ...grpc.CallOption) (*OutSuccess, error)
+	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	GetPrivateDetailUser(ctx context.Context, in *PrivateDetailUserRequest, opts ...grpc.CallOption) (*PrivateDetailUserResponse, error)
+	GetPublicDetailUser(ctx context.Context, in *PublicDetailUserRequest, opts ...grpc.CallOption) (*PublicDetailUserResponse, error)
+	GetListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
+	UpdatePublicDetailUser(ctx context.Context, in *UpdatePublicDetailUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	UpdateCredentialUser(ctx context.Context, in *UpdateCredentialUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	DisableUser(ctx context.Context, in *DisableUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 }
 
 type serviceUserClient struct {
@@ -37,10 +51,80 @@ func NewServiceUserClient(cc grpc.ClientConnInterface) ServiceUserClient {
 	return &serviceUserClient{cc}
 }
 
-func (c *serviceUserClient) Create(ctx context.Context, in *InCreate, opts ...grpc.CallOption) (*OutSuccess, error) {
+func (c *serviceUserClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(OutSuccess)
-	err := c.cc.Invoke(ctx, ServiceUser_Create_FullMethodName, in, out, cOpts...)
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_CreateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) GetPrivateDetailUser(ctx context.Context, in *PrivateDetailUserRequest, opts ...grpc.CallOption) (*PrivateDetailUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PrivateDetailUserResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_GetPrivateDetailUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) GetPublicDetailUser(ctx context.Context, in *PublicDetailUserRequest, opts ...grpc.CallOption) (*PublicDetailUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublicDetailUserResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_GetPublicDetailUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) GetListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_GetListUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) UpdatePublicDetailUser(ctx context.Context, in *UpdatePublicDetailUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_UpdatePublicDetailUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) UpdateCredentialUser(ctx context.Context, in *UpdateCredentialUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_UpdateCredentialUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) DisableUser(ctx context.Context, in *DisableUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_DisableUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_DeleteUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +135,14 @@ func (c *serviceUserClient) Create(ctx context.Context, in *InCreate, opts ...gr
 // All implementations must embed UnimplementedServiceUserServer
 // for forward compatibility.
 type ServiceUserServer interface {
-	Create(context.Context, *InCreate) (*OutSuccess, error)
+	CreateUser(context.Context, *CreateUserRequest) (*SuccessResponse, error)
+	GetPrivateDetailUser(context.Context, *PrivateDetailUserRequest) (*PrivateDetailUserResponse, error)
+	GetPublicDetailUser(context.Context, *PublicDetailUserRequest) (*PublicDetailUserResponse, error)
+	GetListUser(context.Context, *ListUserRequest) (*ListUserResponse, error)
+	UpdatePublicDetailUser(context.Context, *UpdatePublicDetailUserRequest) (*SuccessResponse, error)
+	UpdateCredentialUser(context.Context, *UpdateCredentialUserRequest) (*SuccessResponse, error)
+	DisableUser(context.Context, *DisableUserRequest) (*SuccessResponse, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*SuccessResponse, error)
 	mustEmbedUnimplementedServiceUserServer()
 }
 
@@ -62,8 +153,29 @@ type ServiceUserServer interface {
 // pointer dereference when methods are called.
 type UnimplementedServiceUserServer struct{}
 
-func (UnimplementedServiceUserServer) Create(context.Context, *InCreate) (*OutSuccess, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+func (UnimplementedServiceUserServer) CreateUser(context.Context, *CreateUserRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (UnimplementedServiceUserServer) GetPrivateDetailUser(context.Context, *PrivateDetailUserRequest) (*PrivateDetailUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPrivateDetailUser not implemented")
+}
+func (UnimplementedServiceUserServer) GetPublicDetailUser(context.Context, *PublicDetailUserRequest) (*PublicDetailUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPublicDetailUser not implemented")
+}
+func (UnimplementedServiceUserServer) GetListUser(context.Context, *ListUserRequest) (*ListUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListUser not implemented")
+}
+func (UnimplementedServiceUserServer) UpdatePublicDetailUser(context.Context, *UpdatePublicDetailUserRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePublicDetailUser not implemented")
+}
+func (UnimplementedServiceUserServer) UpdateCredentialUser(context.Context, *UpdateCredentialUserRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCredentialUser not implemented")
+}
+func (UnimplementedServiceUserServer) DisableUser(context.Context, *DisableUserRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DisableUser not implemented")
+}
+func (UnimplementedServiceUserServer) DeleteUser(context.Context, *DeleteUserRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
 func (UnimplementedServiceUserServer) mustEmbedUnimplementedServiceUserServer() {}
 func (UnimplementedServiceUserServer) testEmbeddedByValue()                     {}
@@ -86,20 +198,146 @@ func RegisterServiceUserServer(s grpc.ServiceRegistrar, srv ServiceUserServer) {
 	s.RegisterService(&ServiceUser_ServiceDesc, srv)
 }
 
-func _ServiceUser_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InCreate)
+func _ServiceUser_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceUserServer).Create(ctx, in)
+		return srv.(ServiceUserServer).CreateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ServiceUser_Create_FullMethodName,
+		FullMethod: ServiceUser_CreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceUserServer).Create(ctx, req.(*InCreate))
+		return srv.(ServiceUserServer).CreateUser(ctx, req.(*CreateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_GetPrivateDetailUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PrivateDetailUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).GetPrivateDetailUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_GetPrivateDetailUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).GetPrivateDetailUser(ctx, req.(*PrivateDetailUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_GetPublicDetailUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublicDetailUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).GetPublicDetailUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_GetPublicDetailUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).GetPublicDetailUser(ctx, req.(*PublicDetailUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_GetListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).GetListUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_GetListUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).GetListUser(ctx, req.(*ListUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_UpdatePublicDetailUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePublicDetailUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).UpdatePublicDetailUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_UpdatePublicDetailUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).UpdatePublicDetailUser(ctx, req.(*UpdatePublicDetailUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_UpdateCredentialUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCredentialUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).UpdateCredentialUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_UpdateCredentialUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).UpdateCredentialUser(ctx, req.(*UpdateCredentialUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_DisableUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DisableUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).DisableUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_DisableUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).DisableUser(ctx, req.(*DisableUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).DeleteUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_DeleteUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).DeleteUser(ctx, req.(*DeleteUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +350,36 @@ var ServiceUser_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ServiceUserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Create",
-			Handler:    _ServiceUser_Create_Handler,
+			MethodName: "CreateUser",
+			Handler:    _ServiceUser_CreateUser_Handler,
+		},
+		{
+			MethodName: "GetPrivateDetailUser",
+			Handler:    _ServiceUser_GetPrivateDetailUser_Handler,
+		},
+		{
+			MethodName: "GetPublicDetailUser",
+			Handler:    _ServiceUser_GetPublicDetailUser_Handler,
+		},
+		{
+			MethodName: "GetListUser",
+			Handler:    _ServiceUser_GetListUser_Handler,
+		},
+		{
+			MethodName: "UpdatePublicDetailUser",
+			Handler:    _ServiceUser_UpdatePublicDetailUser_Handler,
+		},
+		{
+			MethodName: "UpdateCredentialUser",
+			Handler:    _ServiceUser_UpdateCredentialUser_Handler,
+		},
+		{
+			MethodName: "DisableUser",
+			Handler:    _ServiceUser_DisableUser_Handler,
+		},
+		{
+			MethodName: "DeleteUser",
+			Handler:    _ServiceUser_DeleteUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
