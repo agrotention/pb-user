@@ -38,9 +38,9 @@ type ServiceUserClient interface {
 	// Registrasi user baru
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	// Detail untuk account owner atau admin
-	GetPrivateDetailUser(ctx context.Context, in *PrivateDetailUserRequest, opts ...grpc.CallOption) (*PrivateDetailUserResponse, error)
+	GetPrivateDetailUser(ctx context.Context, in *DetailUserRequest, opts ...grpc.CallOption) (*PrivateDetailUserResponse, error)
 	// Detail untuk publik
-	GetPublicDetailUser(ctx context.Context, in *PublicDetailUserRequest, opts ...grpc.CallOption) (*PublicDetailUserResponse, error)
+	GetPublicDetailUser(ctx context.Context, in *DetailUserRequest, opts ...grpc.CallOption) (*PublicDetailUserResponse, error)
 	// Get password hash akan digunakan pada auth service
 	// Tidak digunakan langsung di api
 	GetPasswordHash(ctx context.Context, in *GetPasswordHashRequest, opts ...grpc.CallOption) (*GetPasswordHashResponse, error)
@@ -76,7 +76,7 @@ func (c *serviceUserClient) CreateUser(ctx context.Context, in *CreateUserReques
 	return out, nil
 }
 
-func (c *serviceUserClient) GetPrivateDetailUser(ctx context.Context, in *PrivateDetailUserRequest, opts ...grpc.CallOption) (*PrivateDetailUserResponse, error) {
+func (c *serviceUserClient) GetPrivateDetailUser(ctx context.Context, in *DetailUserRequest, opts ...grpc.CallOption) (*PrivateDetailUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PrivateDetailUserResponse)
 	err := c.cc.Invoke(ctx, ServiceUser_GetPrivateDetailUser_FullMethodName, in, out, cOpts...)
@@ -86,7 +86,7 @@ func (c *serviceUserClient) GetPrivateDetailUser(ctx context.Context, in *Privat
 	return out, nil
 }
 
-func (c *serviceUserClient) GetPublicDetailUser(ctx context.Context, in *PublicDetailUserRequest, opts ...grpc.CallOption) (*PublicDetailUserResponse, error) {
+func (c *serviceUserClient) GetPublicDetailUser(ctx context.Context, in *DetailUserRequest, opts ...grpc.CallOption) (*PublicDetailUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PublicDetailUserResponse)
 	err := c.cc.Invoke(ctx, ServiceUser_GetPublicDetailUser_FullMethodName, in, out, cOpts...)
@@ -173,9 +173,9 @@ type ServiceUserServer interface {
 	// Registrasi user baru
 	CreateUser(context.Context, *CreateUserRequest) (*SuccessResponse, error)
 	// Detail untuk account owner atau admin
-	GetPrivateDetailUser(context.Context, *PrivateDetailUserRequest) (*PrivateDetailUserResponse, error)
+	GetPrivateDetailUser(context.Context, *DetailUserRequest) (*PrivateDetailUserResponse, error)
 	// Detail untuk publik
-	GetPublicDetailUser(context.Context, *PublicDetailUserRequest) (*PublicDetailUserResponse, error)
+	GetPublicDetailUser(context.Context, *DetailUserRequest) (*PublicDetailUserResponse, error)
 	// Get password hash akan digunakan pada auth service
 	// Tidak digunakan langsung di api
 	GetPasswordHash(context.Context, *GetPasswordHashRequest) (*GetPasswordHashResponse, error)
@@ -204,10 +204,10 @@ type UnimplementedServiceUserServer struct{}
 func (UnimplementedServiceUserServer) CreateUser(context.Context, *CreateUserRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedServiceUserServer) GetPrivateDetailUser(context.Context, *PrivateDetailUserRequest) (*PrivateDetailUserResponse, error) {
+func (UnimplementedServiceUserServer) GetPrivateDetailUser(context.Context, *DetailUserRequest) (*PrivateDetailUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPrivateDetailUser not implemented")
 }
-func (UnimplementedServiceUserServer) GetPublicDetailUser(context.Context, *PublicDetailUserRequest) (*PublicDetailUserResponse, error) {
+func (UnimplementedServiceUserServer) GetPublicDetailUser(context.Context, *DetailUserRequest) (*PublicDetailUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPublicDetailUser not implemented")
 }
 func (UnimplementedServiceUserServer) GetPasswordHash(context.Context, *GetPasswordHashRequest) (*GetPasswordHashResponse, error) {
@@ -271,7 +271,7 @@ func _ServiceUser_CreateUser_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _ServiceUser_GetPrivateDetailUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PrivateDetailUserRequest)
+	in := new(DetailUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -283,13 +283,13 @@ func _ServiceUser_GetPrivateDetailUser_Handler(srv interface{}, ctx context.Cont
 		FullMethod: ServiceUser_GetPrivateDetailUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceUserServer).GetPrivateDetailUser(ctx, req.(*PrivateDetailUserRequest))
+		return srv.(ServiceUserServer).GetPrivateDetailUser(ctx, req.(*DetailUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ServiceUser_GetPublicDetailUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PublicDetailUserRequest)
+	in := new(DetailUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -301,7 +301,7 @@ func _ServiceUser_GetPublicDetailUser_Handler(srv interface{}, ctx context.Conte
 		FullMethod: ServiceUser_GetPublicDetailUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceUserServer).GetPublicDetailUser(ctx, req.(*PublicDetailUserRequest))
+		return srv.(ServiceUserServer).GetPublicDetailUser(ctx, req.(*DetailUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

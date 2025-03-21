@@ -14,14 +14,5 @@
 | updated_at | TIMESTAMP | NOT NULL        | CURRENT_TIMESTAMP |
 | deleted_at | TIMESTAMP | NULL            | -                 |
 
-## TODO
 
-- [x] Membuat kontrak untuk service user
-  - [x] CreateUser
-  - [x] GetPrivateDetailUser
-  - [x] GetPublicDetailUser
-  - [x] GetListUser
-  - [x] UpdatePublicDetailUser
-  - [x] UpdateCredentialUser
-  - [x] DisableUser
-  - [x] DeleteUser
+
