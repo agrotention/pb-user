@@ -22,7 +22,7 @@ service ServiceUser {
     rpc GetListUser(ListUserRequest) returns (ListUserResponse);
 
     // List deleted users (admin only)
-    rpc GetListDeletedUser(GetListDeletedUserRequest) returns (ListUserResponse);
+    rpc GetListDeletedUser(ListUserRequest) returns (ListUserResponse);
 
     // Update data umum user
     rpc UpdatePublicDetailUser(UpdatePublicDetailUserRequest) returns (SuccessResponse);
@@ -87,7 +87,7 @@ message PublicDetailUserResponse {
 // 
 // Isi salah satu username/email
 // Jika semua terisi maka hanya yang pertama yang dipakai
-// Urutan: Username -> Email
+// Urutan: Username -> Email -> UserID
 // Tujuan:
 // - Untuk login Username/Email & Password
 // - Langkah awal update credential
@@ -120,14 +120,6 @@ message ListUserRequest {
 message ListUserResponse {
     repeated ListUserItem Users = 1;
 }
-
-
-// R List deleted users
-message GetListDeletedUserRequest {
-    int64 Take = 1;
-    int64 Skip = 2;
-}
-
 
 // Update public detail
 message UpdatePublicDetailUserRequest {
