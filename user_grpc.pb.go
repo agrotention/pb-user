@@ -19,27 +19,42 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ServiceUser_CreateUser_FullMethodName             = "/ServiceUser/CreateUser"
-	ServiceUser_GetPrivateDetailUser_FullMethodName   = "/ServiceUser/GetPrivateDetailUser"
-	ServiceUser_GetPublicDetailUser_FullMethodName    = "/ServiceUser/GetPublicDetailUser"
-	ServiceUser_GetListUser_FullMethodName            = "/ServiceUser/GetListUser"
-	ServiceUser_UpdatePublicDetailUser_FullMethodName = "/ServiceUser/UpdatePublicDetailUser"
-	ServiceUser_UpdateCredentialUser_FullMethodName   = "/ServiceUser/UpdateCredentialUser"
-	ServiceUser_DisableUser_FullMethodName            = "/ServiceUser/DisableUser"
-	ServiceUser_DeleteUser_FullMethodName             = "/ServiceUser/DeleteUser"
+	ServiceUser_CreateUser_FullMethodName             = "/user.pb.ServiceUser/CreateUser"
+	ServiceUser_GetPrivateDetailUser_FullMethodName   = "/user.pb.ServiceUser/GetPrivateDetailUser"
+	ServiceUser_GetPublicDetailUser_FullMethodName    = "/user.pb.ServiceUser/GetPublicDetailUser"
+	ServiceUser_GetPasswordHash_FullMethodName        = "/user.pb.ServiceUser/GetPasswordHash"
+	ServiceUser_GetListUser_FullMethodName            = "/user.pb.ServiceUser/GetListUser"
+	ServiceUser_GetListDeletedUser_FullMethodName     = "/user.pb.ServiceUser/GetListDeletedUser"
+	ServiceUser_UpdatePublicDetailUser_FullMethodName = "/user.pb.ServiceUser/UpdatePublicDetailUser"
+	ServiceUser_UpdateCredentialUser_FullMethodName   = "/user.pb.ServiceUser/UpdateCredentialUser"
+	ServiceUser_DisableUser_FullMethodName            = "/user.pb.ServiceUser/DisableUser"
+	ServiceUser_DeleteUser_FullMethodName             = "/user.pb.ServiceUser/DeleteUser"
 )
 
 // ServiceUserClient is the client API for ServiceUser service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceUserClient interface {
+	// Registrasi user baru
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	// Detail untuk account owner atau admin
 	GetPrivateDetailUser(ctx context.Context, in *PrivateDetailUserRequest, opts ...grpc.CallOption) (*PrivateDetailUserResponse, error)
+	// Detail untuk publik
 	GetPublicDetailUser(ctx context.Context, in *PublicDetailUserRequest, opts ...grpc.CallOption) (*PublicDetailUserResponse, error)
+	// Get password hash akan digunakan pada auth service
+	// Tidak digunakan langsung di api
+	GetPasswordHash(ctx context.Context, in *GetPasswordHashRequest, opts ...grpc.CallOption) (*GetPasswordHashResponse, error)
+	// List user
 	GetListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
+	// List deleted users (admin only)
+	GetListDeletedUser(ctx context.Context, in *GetListDeletedUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
+	// Update data umum user
 	UpdatePublicDetailUser(ctx context.Context, in *UpdatePublicDetailUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	// Update password atau email user
 	UpdateCredentialUser(ctx context.Context, in *UpdateCredentialUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	// Menonaktifkan user, bisa diaktifkan
 	DisableUser(ctx context.Context, in *DisableUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	// Soft delete user, akun tidak bisa dikembalikan
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 }
 
@@ -81,10 +96,30 @@ func (c *serviceUserClient) GetPublicDetailUser(ctx context.Context, in *PublicD
 	return out, nil
 }
 
+func (c *serviceUserClient) GetPasswordHash(ctx context.Context, in *GetPasswordHashRequest, opts ...grpc.CallOption) (*GetPasswordHashResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPasswordHashResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_GetPasswordHash_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceUserClient) GetListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListUserResponse)
 	err := c.cc.Invoke(ctx, ServiceUser_GetListUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceUserClient) GetListDeletedUser(ctx context.Context, in *GetListDeletedUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_GetListDeletedUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,13 +170,26 @@ func (c *serviceUserClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 // All implementations must embed UnimplementedServiceUserServer
 // for forward compatibility.
 type ServiceUserServer interface {
+	// Registrasi user baru
 	CreateUser(context.Context, *CreateUserRequest) (*SuccessResponse, error)
+	// Detail untuk account owner atau admin
 	GetPrivateDetailUser(context.Context, *PrivateDetailUserRequest) (*PrivateDetailUserResponse, error)
+	// Detail untuk publik
 	GetPublicDetailUser(context.Context, *PublicDetailUserRequest) (*PublicDetailUserResponse, error)
+	// Get password hash akan digunakan pada auth service
+	// Tidak digunakan langsung di api
+	GetPasswordHash(context.Context, *GetPasswordHashRequest) (*GetPasswordHashResponse, error)
+	// List user
 	GetListUser(context.Context, *ListUserRequest) (*ListUserResponse, error)
+	// List deleted users (admin only)
+	GetListDeletedUser(context.Context, *GetListDeletedUserRequest) (*ListUserResponse, error)
+	// Update data umum user
 	UpdatePublicDetailUser(context.Context, *UpdatePublicDetailUserRequest) (*SuccessResponse, error)
+	// Update password atau email user
 	UpdateCredentialUser(context.Context, *UpdateCredentialUserRequest) (*SuccessResponse, error)
+	// Menonaktifkan user, bisa diaktifkan
 	DisableUser(context.Context, *DisableUserRequest) (*SuccessResponse, error)
+	// Soft delete user, akun tidak bisa dikembalikan
 	DeleteUser(context.Context, *DeleteUserRequest) (*SuccessResponse, error)
 	mustEmbedUnimplementedServiceUserServer()
 }
@@ -162,8 +210,14 @@ func (UnimplementedServiceUserServer) GetPrivateDetailUser(context.Context, *Pri
 func (UnimplementedServiceUserServer) GetPublicDetailUser(context.Context, *PublicDetailUserRequest) (*PublicDetailUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPublicDetailUser not implemented")
 }
+func (UnimplementedServiceUserServer) GetPasswordHash(context.Context, *GetPasswordHashRequest) (*GetPasswordHashResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPasswordHash not implemented")
+}
 func (UnimplementedServiceUserServer) GetListUser(context.Context, *ListUserRequest) (*ListUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetListUser not implemented")
+}
+func (UnimplementedServiceUserServer) GetListDeletedUser(context.Context, *GetListDeletedUserRequest) (*ListUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListDeletedUser not implemented")
 }
 func (UnimplementedServiceUserServer) UpdatePublicDetailUser(context.Context, *UpdatePublicDetailUserRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePublicDetailUser not implemented")
@@ -252,6 +306,24 @@ func _ServiceUser_GetPublicDetailUser_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ServiceUser_GetPasswordHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPasswordHashRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).GetPasswordHash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_GetPasswordHash_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).GetPasswordHash(ctx, req.(*GetPasswordHashRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ServiceUser_GetListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListUserRequest)
 	if err := dec(in); err != nil {
@@ -266,6 +338,24 @@ func _ServiceUser_GetListUser_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceUserServer).GetListUser(ctx, req.(*ListUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServiceUser_GetListDeletedUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetListDeletedUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).GetListDeletedUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_GetListDeletedUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).GetListDeletedUser(ctx, req.(*GetListDeletedUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -346,7 +436,7 @@ func _ServiceUser_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ServiceUser_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ServiceUser",
+	ServiceName: "user.pb.ServiceUser",
 	HandlerType: (*ServiceUserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -362,8 +452,16 @@ var ServiceUser_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ServiceUser_GetPublicDetailUser_Handler,
 		},
 		{
+			MethodName: "GetPasswordHash",
+			Handler:    _ServiceUser_GetPasswordHash_Handler,
+		},
+		{
 			MethodName: "GetListUser",
 			Handler:    _ServiceUser_GetListUser_Handler,
+		},
+		{
+			MethodName: "GetListDeletedUser",
+			Handler:    _ServiceUser_GetListDeletedUser_Handler,
 		},
 		{
 			MethodName: "UpdatePublicDetailUser",

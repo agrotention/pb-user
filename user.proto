@@ -2,19 +2,44 @@ syntax = "proto3";
 
 option go_package = "./pb-user";
 import "google/protobuf/timestamp.proto";
+package user.pb;
 
 service ServiceUser {
+    // Registrasi user baru
     rpc CreateUser(CreateUserRequest) returns (SuccessResponse);
-    rpc GetPrivateDetailUser(PrivateDetailUserRequest) returns (PrivateDetailUserResponse);
-    rpc GetPublicDetailUser(PublicDetailUserRequest) returns (PublicDetailUserResponse);
+
+    // Detail untuk account owner atau admin
+    rpc GetPrivateDetailUser(DetailUserRequest) returns (PrivateDetailUserResponse);
+
+    // Detail untuk publik
+    rpc GetPublicDetailUser(DetailUserRequest) returns (PublicDetailUserResponse);
+
+    // Get password hash akan digunakan pada auth service
+    // Tidak digunakan langsung di api
+    rpc GetPasswordHash(GetPasswordHashRequest) returns (GetPasswordHashResponse);
+
+    // List user
     rpc GetListUser(ListUserRequest) returns (ListUserResponse);
+
+    // List deleted users (admin only)
+    rpc GetListDeletedUser(GetListDeletedUserRequest) returns (ListUserResponse);
+
+    // Update data umum user
     rpc UpdatePublicDetailUser(UpdatePublicDetailUserRequest) returns (SuccessResponse);
+
+    // Update password atau email user
     rpc UpdateCredentialUser(UpdateCredentialUserRequest) returns (SuccessResponse);
+
+    // Menonaktifkan user, bisa diaktifkan
     rpc DisableUser(DisableUserRequest) returns (SuccessResponse);
+
+    // Soft delete user, akun tidak bisa dikembalikan
     rpc DeleteUser(DeleteUserRequest) returns (SuccessResponse);
 }
 
-// Create user
+
+// # Create user
+// ## Skema data registrasi user baru
 message CreateUserRequest {
     string Email = 1;
     string Username = 2;
@@ -24,36 +49,66 @@ message CreateUserRequest {
 }
 
 
+// # Detail user
 // Private detail user
-message PrivateDetailUserRequest {
-    string UserID = 1;
+
+// Isi salah satu dari username/email/userID
+// Akan di periksa berurutan dari username -> email -> user_id
+// Jika username ditemukan maka field lain tidak diperiksa.
+// Begitupun seterusnya
+message DetailUserRequest {
+    string Username = 1;
+    string Email = 2;
+    string UserID = 3;
 }
+// Private (hanya Pemilik akun/admin)
 message PrivateDetailUserResponse {
-    string Email = 1;
+    string UserID = 1; // uuid
+    string Email = 2;
+    string Username = 3;
+    string FirstName = 4;
+    string LastName = 5;
+    google.protobuf.Timestamp CreatedAt = 6;
+    google.protobuf.Timestamp UpdatedAt = 7;
+}
+// Public detail
+message PublicDetailUserResponse {
+    string UserID = 1;
     string Username = 2;
     string FirstName = 3;
-    string LastName = 4;    
-    google.protobuf.Timestamp CreatedAt = 5;
-    google.protobuf.Timestamp UpdatedAt = 6;
+    string LastName = 4; 
 }
 
 
-// Public detail
-message PublicDetailUserRequest {
+// Get password hash
+// 
+// Isi salah satu username/email
+// Jika semua terisi maka hanya yang pertama yang dipakai
+// Urutan: Username -> Email
+// Tujuan:
+// - Untuk login Username/Email & Password
+// - Langkah awal update credential
+message GetPasswordHashRequest {
     string Username = 1;
+    string Email = 2;
+
+    // Field UserID berguna saat update kredensial dan
+    // mencocokkan password. User akan di query dengan ID
+    // yang didapatkan dari verify token
+    string UserID = 3; 
 }
-message PublicDetailUserResponse {
-    string Username = 1;
-    string FirstName = 2;
-    string LastName = 3; 
+message GetPasswordHashResponse {
+    string PasswordHash = 1;
 }
 
 
-// List users
+// # List users
+// User information on list
 message ListUserItem {
-    string Username = 1;
-    string FirstName = 2;
-    string LastName = 3; 
+    string UserID = 1;
+    string Username = 2;
+    string FirstName = 3;
+    string LastName = 4; 
 }
 message ListUserRequest {
     int64 Take = 1;
@@ -64,18 +119,27 @@ message ListUserResponse {
 }
 
 
+// R List deleted users
+message GetListDeletedUserRequest {
+    int64 Take = 1;
+    int64 Skip = 2;
+}
+
+
 // Update public detail
 message UpdatePublicDetailUserRequest {
-    string Username = 1;
-    string FirstName = 2;
-    string LastName = 3; 
+    string UserID = 1;
+    string Username = 2;
+    string FirstName = 3;
+    string LastName = 4; 
 }
 
 
 // Update credential
 message UpdateCredentialUserRequest {
-    string Email = 1;
-    string Password = 2;
+    string UserID = 1;
+    string Email = 2;
+    string Password = 3;
 }
 
 
@@ -91,7 +155,7 @@ message DeleteUserRequest {
 }
 
 
-// General user opetation success response
+// General user operation success response
 message SuccessResponse {
     string UserID = 1;
 }
