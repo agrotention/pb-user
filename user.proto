@@ -33,6 +33,9 @@ service ServiceUser {
     // Menonaktifkan user, bisa diaktifkan
     rpc DisableUser(DisableUserRequest) returns (SuccessResponse);
 
+    // Mengaktifkan user
+    rpc EnableUser (EnableUserRequest) returns (SuccessResponse);
+
     // Soft delete user, akun tidak bisa dikembalikan
     rpc DeleteUser(DeleteUserRequest) returns (SuccessResponse);
 }
@@ -147,6 +150,12 @@ message UpdateCredentialUserRequest {
 message DisableUserRequest {
     string UserID = 1;
 }
+
+// Enable user
+message EnableUserRequest {
+    string UserID = 1;
+}
+
 
 
 // Delete user

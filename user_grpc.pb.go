@@ -28,6 +28,7 @@ const (
 	ServiceUser_UpdatePublicDetailUser_FullMethodName = "/user.pb.ServiceUser/UpdatePublicDetailUser"
 	ServiceUser_UpdateCredentialUser_FullMethodName   = "/user.pb.ServiceUser/UpdateCredentialUser"
 	ServiceUser_DisableUser_FullMethodName            = "/user.pb.ServiceUser/DisableUser"
+	ServiceUser_EnableUser_FullMethodName             = "/user.pb.ServiceUser/EnableUser"
 	ServiceUser_DeleteUser_FullMethodName             = "/user.pb.ServiceUser/DeleteUser"
 )
 
@@ -54,6 +55,8 @@ type ServiceUserClient interface {
 	UpdateCredentialUser(ctx context.Context, in *UpdateCredentialUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	// Menonaktifkan user, bisa diaktifkan
 	DisableUser(ctx context.Context, in *DisableUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
+	// Mengaktifkan user
+	EnableUser(ctx context.Context, in *EnableUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	// Soft delete user, akun tidak bisa dikembalikan
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 }
@@ -156,6 +159,16 @@ func (c *serviceUserClient) DisableUser(ctx context.Context, in *DisableUserRequ
 	return out, nil
 }
 
+func (c *serviceUserClient) EnableUser(ctx context.Context, in *EnableUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SuccessResponse)
+	err := c.cc.Invoke(ctx, ServiceUser_EnableUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceUserClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SuccessResponse)
@@ -189,6 +202,8 @@ type ServiceUserServer interface {
 	UpdateCredentialUser(context.Context, *UpdateCredentialUserRequest) (*SuccessResponse, error)
 	// Menonaktifkan user, bisa diaktifkan
 	DisableUser(context.Context, *DisableUserRequest) (*SuccessResponse, error)
+	// Mengaktifkan user
+	EnableUser(context.Context, *EnableUserRequest) (*SuccessResponse, error)
 	// Soft delete user, akun tidak bisa dikembalikan
 	DeleteUser(context.Context, *DeleteUserRequest) (*SuccessResponse, error)
 	mustEmbedUnimplementedServiceUserServer()
@@ -227,6 +242,9 @@ func (UnimplementedServiceUserServer) UpdateCredentialUser(context.Context, *Upd
 }
 func (UnimplementedServiceUserServer) DisableUser(context.Context, *DisableUserRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DisableUser not implemented")
+}
+func (UnimplementedServiceUserServer) EnableUser(context.Context, *EnableUserRequest) (*SuccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EnableUser not implemented")
 }
 func (UnimplementedServiceUserServer) DeleteUser(context.Context, *DeleteUserRequest) (*SuccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
@@ -414,6 +432,24 @@ func _ServiceUser_DisableUser_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ServiceUser_EnableUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EnableUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceUserServer).EnableUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ServiceUser_EnableUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceUserServer).EnableUser(ctx, req.(*EnableUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ServiceUser_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
@@ -474,6 +510,10 @@ var ServiceUser_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DisableUser",
 			Handler:    _ServiceUser_DisableUser_Handler,
+		},
+		{
+			MethodName: "EnableUser",
+			Handler:    _ServiceUser_EnableUser_Handler,
 		},
 		{
 			MethodName: "DeleteUser",
