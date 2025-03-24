@@ -62,11 +62,11 @@ message CreateUserRequest {
 message DetailUserRequest {
     string Username = 1;
     string Email = 2;
-    string UserID = 3;
+    string ID = 3;
 }
 // Private (hanya Pemilik akun/admin)
 message PrivateDetailUserResponse {
-    string UserID = 1; // uuid
+    string ID = 1; // uuid
     string Email = 2;
     string Username = 3;
     string FirstName = 4;
@@ -76,18 +76,18 @@ message PrivateDetailUserResponse {
 }
 // Public detail
 message PublicDetailUserResponse {
-    string UserID = 1;
+    string ID = 1;
     string Username = 2;
     string FirstName = 3;
-    string LastName = 4; 
+    string LastName = 4;
 }
 
 
 // Get password hash
-// 
+//
 // Isi salah satu username/email
 // Jika semua terisi maka hanya yang pertama yang dipakai
-// Urutan: Username -> Email -> UserID
+// Urutan: Username -> Email -> ID
 // Tujuan:
 // - Untuk login Username/Email & Password
 // - Langkah awal update credential
@@ -95,10 +95,10 @@ message GetPasswordHashRequest {
     string Username = 1;
     string Email = 2;
 
-    // Field UserID berguna saat update kredensial dan
+    // Field ID berguna saat update kredensial dan
     // mencocokkan password. User akan di query dengan ID
     // yang didapatkan dari verify token
-    string UserID = 3; 
+    string ID = 3;
 }
 message GetPasswordHashResponse {
     string PasswordHash = 1;
@@ -108,10 +108,10 @@ message GetPasswordHashResponse {
 // # List users
 // User information on list
 message ListUserItem {
-    string UserID = 1;
+    string ID = 1;
     string Username = 2;
     string FirstName = 3;
-    string LastName = 4; 
+    string LastName = 4;
 }
 message ListUserRequest {
     int64 Take = 1;
@@ -123,16 +123,16 @@ message ListUserResponse {
 
 // Update public detail
 message UpdatePublicDetailUserRequest {
-    string UserID = 1;
+    string ID = 1;
     string Username = 2;
     string FirstName = 3;
-    string LastName = 4; 
+    string LastName = 4;
 }
 
 
 // Update credential
 message UpdateCredentialUserRequest {
-    string UserID = 1;
+    string ID = 1;
     string Email = 2;
     string Password = 3;
 }
@@ -140,23 +140,23 @@ message UpdateCredentialUserRequest {
 
 // Disable user
 message DisableUserRequest {
-    string UserID = 1;
+    string ID = 1;
 }
 
 // Enable user
 message EnableUserRequest {
-    string UserID = 1;
+    string ID = 1;
 }
 
 
 
 // Delete user
 message DeleteUserRequest {
-    string UserID = 1;
+    string ID = 1;
 }
 
 
 // General user operation success response
 message SuccessResponse {
-    string UserID = 1;
+    string ID = 1;
 }

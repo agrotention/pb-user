@@ -48,7 +48,7 @@ type ServiceUserClient interface {
 	// List user
 	GetListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
 	// List deleted users (admin only)
-	GetListDeletedUser(ctx context.Context, in *GetListDeletedUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
+	GetListDeletedUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error)
 	// Update data umum user
 	UpdatePublicDetailUser(ctx context.Context, in *UpdatePublicDetailUserRequest, opts ...grpc.CallOption) (*SuccessResponse, error)
 	// Update password atau email user
@@ -119,7 +119,7 @@ func (c *serviceUserClient) GetListUser(ctx context.Context, in *ListUserRequest
 	return out, nil
 }
 
-func (c *serviceUserClient) GetListDeletedUser(ctx context.Context, in *GetListDeletedUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
+func (c *serviceUserClient) GetListDeletedUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListUserResponse)
 	err := c.cc.Invoke(ctx, ServiceUser_GetListDeletedUser_FullMethodName, in, out, cOpts...)
@@ -195,7 +195,7 @@ type ServiceUserServer interface {
 	// List user
 	GetListUser(context.Context, *ListUserRequest) (*ListUserResponse, error)
 	// List deleted users (admin only)
-	GetListDeletedUser(context.Context, *GetListDeletedUserRequest) (*ListUserResponse, error)
+	GetListDeletedUser(context.Context, *ListUserRequest) (*ListUserResponse, error)
 	// Update data umum user
 	UpdatePublicDetailUser(context.Context, *UpdatePublicDetailUserRequest) (*SuccessResponse, error)
 	// Update password atau email user
@@ -231,7 +231,7 @@ func (UnimplementedServiceUserServer) GetPasswordHash(context.Context, *GetPassw
 func (UnimplementedServiceUserServer) GetListUser(context.Context, *ListUserRequest) (*ListUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetListUser not implemented")
 }
-func (UnimplementedServiceUserServer) GetListDeletedUser(context.Context, *GetListDeletedUserRequest) (*ListUserResponse, error) {
+func (UnimplementedServiceUserServer) GetListDeletedUser(context.Context, *ListUserRequest) (*ListUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetListDeletedUser not implemented")
 }
 func (UnimplementedServiceUserServer) UpdatePublicDetailUser(context.Context, *UpdatePublicDetailUserRequest) (*SuccessResponse, error) {
@@ -361,7 +361,7 @@ func _ServiceUser_GetListUser_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _ServiceUser_GetListDeletedUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetListDeletedUserRequest)
+	in := new(ListUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -373,7 +373,7 @@ func _ServiceUser_GetListDeletedUser_Handler(srv interface{}, ctx context.Contex
 		FullMethod: ServiceUser_GetListDeletedUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceUserServer).GetListDeletedUser(ctx, req.(*GetListDeletedUserRequest))
+		return srv.(ServiceUserServer).GetListDeletedUser(ctx, req.(*ListUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
